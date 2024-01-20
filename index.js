@@ -28,7 +28,7 @@ server.post("/addForm", validateForm, isvalidated, addForm)
 
 mongoose.connect("mongodb://localhost:27017")
   .then(data => console.log("Database Connected"))
-  .catch(errore => console.log("Error"))
+  .catch(error => console.log(error))
 
 const { join } = require('node:path');
 server.get('/', (req, res) => {
