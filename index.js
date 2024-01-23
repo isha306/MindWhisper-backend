@@ -12,7 +12,9 @@ const http = require("http")
 const app = http.createServer(server)
 const { Server } = require('socket.io')
 const io = new Server(app)
-
+const { join } = require('node:path');
+const { sendEmail } = require("./src/helper/Email")
+require("dotenv").config()
 
 server.get("/", (req, res) => {
 
@@ -24,13 +26,17 @@ server.get("/", (req, res) => {
 server.post("/register", register)
 server.post("/login", login)
 server.get("/get-user", verifyToken, findUser)
-server.post("/addForm", validateForm, isvalidated, addForm)
+server.post("/addForm", validateForm, isvalidated, addForm,sendEmail)
 
-mongoose.connect("mongodb://localhost:27017")
+
+const db = process.env.MONGO_URL
+
+
+mongoose.connect(db)
   .then(data => console.log("Database Connected"))
   .catch(error => console.log(error))
 
-const { join } = require('node:path');
+
 server.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'index.html'));
 });
@@ -48,7 +54,7 @@ io.on('connection', (socket) => {
    
   
 })
-
-app.listen(3000, () => {
+const port=process.env.PORT
+app.listen(port, () => {
   console.log('server running at http://localhost:3000');
 });
