@@ -1,7 +1,7 @@
 const express = require("express")
 const mongoose = require("mongoose")
 const Users = require("./src/models/users")
-const { register, login, findUser } = require("./src/controllers/users")
+const { register, login, findUser ,updateUser} = require("./src/controllers/users")
 const server = express()
 const cors = require("cors")
 const { verifyToken, validateForm, isvalidated } = require("./src/Middlewares")
@@ -27,12 +27,14 @@ server.post("/register", register)
 server.post("/login", login)
 server.get("/get-user", verifyToken, findUser)
 server.post("/addForm", validateForm, isvalidated, addForm,sendEmail)
-
-
+server.put("/update-user",verifyToken,updateUser);
+server.get("/get-product/:id",(req,res)=>{
+  res.send(req.params.id)
+})
 const db = process.env.MONGO_URL
 
 
-mongoose.connect(db)
+mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.b5oerk2.mongodb.net/?retryWrites=true&w=majority`)
   .then(data => console.log("Database Connected"))
   .catch(error => console.log(error))
 
